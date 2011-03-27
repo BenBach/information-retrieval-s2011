@@ -125,18 +125,18 @@ public class BOW {
 
                 switch (method) {
                     case BOOLEAN:
-                        result.calculateWeights();
+                        result.calculateWeightsBoolean();
                         break;
                     case TF:
-                        result.calculateWeights();
+                        result.calculateWeightsBoolean();
                         break;
                     case TF_IDF:
-                        result.calculateWeights();
+                        result.calculateWeightsBoolean();
                         break;
                 }
 
                 for (Entry entry : result.getDocs()) {
-                    Id id = new Id(entry.getClazz(), "" + entry.getDocId());
+                    Id id = new Id(entry.getClassName(), "" + entry.getDocId());
 
                     List<Column> entries = rows.get(id);
 
@@ -182,20 +182,6 @@ public class BOW {
             }
 
             writer.close();
-        } else {
-            //iterate through Hashtable values Enumeration
-            while (e.hasMoreElements()) {
-                Result result = e.nextElement();
-                result.calculateWeights();
-
-                if (result.performFeatureSelection(lowerThreshold, upperThreshold)) {
-                    results.remove(result.getFeature());
-                } else {
-                    System.out.println(result);
-                }
-
-
-            }
         }
 
         // Print Result List
@@ -207,7 +193,7 @@ public class BOW {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         BOW bow = new BOW();
         CmdLineParser parser = new CmdLineParser(bow);
         parser.setUsageWidth(80); // width of the error display area
