@@ -75,7 +75,7 @@ public class Result
 		if(oldLength != null)
 		{
 			oldLength++;
-			documentLengths.remove(docId);
+			documentLengths.remove(new Entry(className, docId));
 			documentLengths.put(new Entry(className, docId), oldLength);
 		}
 		else
@@ -86,7 +86,42 @@ public class Result
 		
 	}
 	
-	public void calculateWeights()
+	public void calculateWeightsBoolean()
+	{
+		// Already in List
+		ListIterator<Entry> itr = docs.listIterator();
+	    while(itr.hasNext())
+	    {
+	    	Entry next = itr.next();
+
+	    	// Get Frequency
+	    	Integer frequency = next.getFreq();
+	    	if(frequency > 0)
+	    		next.setWeight(1.0);
+	    	else
+	    		next.setWeight(0.0);
+	    	
+	    	itr.set(next);
+	    }
+	}
+	
+	public void calculateWeightsTF()
+	{
+		// Already in List
+		ListIterator<Entry> itr = docs.listIterator();
+	    while(itr.hasNext())
+	    {
+	    	Entry next = itr.next();
+
+	    	// Get Frequency
+	    	Integer frequency = next.getFreq();
+	    	next.setWeight(frequency.doubleValue());
+	    	
+	    	itr.set(next);
+	    }
+	}
+	
+	public void calculateWeightsNormalizedTF()
 	{
 		// Already in List
 		ListIterator<Entry> itr = docs.listIterator();
@@ -101,6 +136,8 @@ public class Result
 	    	itr.set(next);
 	    }
 	}
+	
+	
 	
 	public boolean performFeatureSelection(int lowerTreshold, int upperTreshold)
 	{

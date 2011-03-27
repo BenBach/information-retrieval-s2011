@@ -81,7 +81,7 @@ public class BOW {
         //iterate through Hashtable values Enumeration
         while (e.hasMoreElements()) {
             Result result = e.nextElement();
-            result.calculateWeights();
+            result.calculateWeightsNormalizedTF();
 
             if (result.performFeatureSelection(lowerThreshold, upperThreshold)) {
                 results.remove(result.getFeature());

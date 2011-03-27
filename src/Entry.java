@@ -45,8 +45,7 @@ public class Entry
 	
 	public boolean equals(Object anotherEntry)
 	{
-		if(this.className == ((Entry)anotherEntry).className && this.docId == ((Entry)anotherEntry).docId
-				&& this.freq == ((Entry)anotherEntry).freq && this.weight == ((Entry)anotherEntry).weight)
+		if(this.className == ((Entry)anotherEntry).className && this.docId == ((Entry)anotherEntry).docId)
 			return true;
 		return false;
 	}
