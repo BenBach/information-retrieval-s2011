@@ -55,20 +55,20 @@ public class BOW {
                     if (result == null) {
                         // No add to dictionary
                         List<Entry> newList = new LinkedList<Entry>();
-                        Entry entry = new Entry();
-                        entry.setDocId(fileName);
+                        Entry entry = new Entry(className, fileName);
+                        // entry.setDocId(fileName);
                         entry.setFreq(1);
 
                         newList.add(entry);
 
                         results.put(token, new Result(token, 1, newList));
 
-                        Result.incrementDocumentLength(fileName);
+                        Result.incrementDocumentLength(className, fileName);
                     } else {
                         // Add document if it's not already in list
 
                         // Add Document Reference to dictionary
-                        result.addToDocList(fileName);
+                        result.addToDocList(className, fileName);
                     }
                 }
             }
@@ -81,7 +81,7 @@ public class BOW {
         //iterate through Hashtable values Enumeration
         while (e.hasMoreElements()) {
             Result result = e.nextElement();
-            result.calculateWeightsTF();
+            result.calculateWeights();
 
             if (result.performFeatureSelection(lowerThreshold, upperThreshold)) {
                 results.remove(result.getFeature());

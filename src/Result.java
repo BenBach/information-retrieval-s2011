@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 public class Result
 {
-	public static Dictionary<Long, Long> documentLengths = new Hashtable<Long, Long>();
+	public static Dictionary<Entry, Long> documentLengths = new Hashtable<Entry, Long>();
 	private String feature;
 	
 	
@@ -45,14 +45,14 @@ public class Result
 		this.docs = docs;
 	}
 	
-	public void addToDocList(Long docId)
+	public void addToDocList(String className, Long docId)
 	{
 		// Already in List
 		ListIterator<Entry> itr = docs.listIterator();
 	    while(itr.hasNext())
 	    {
 	    	Entry next = itr.next();
-	    	if(next.getDocId() == docId)
+	    	if(next.getDocId() == docId && next.getClassName().equals(className))
 	    	{
 	    		next.setFreq(next.getFreq() + 1);
 	    		itr.set(next);
@@ -60,29 +60,28 @@ public class Result
 	    		return;
 	    	}
 	    }
-		Entry entry = new Entry();
-		entry.setDocId(docId);
+		Entry entry = new Entry(className, docId);
 		entry.setFreq(1);
 		
 		docs.add(entry);
 		setFreq(getFreq() + 1);
 		
-		incrementDocumentLength(docId);
+		incrementDocumentLength(className, docId);
 	}
 	
-	public static void incrementDocumentLength(Long docId)
+	public static void incrementDocumentLength(String className, Long docId)
 	{
-		Long oldLength = documentLengths.get(docId);
+		Long oldLength = documentLengths.get(new Entry(className, docId));
 		if(oldLength != null)
 		{
 			oldLength++;
 			documentLengths.remove(docId);
-			documentLengths.put(docId, oldLength);
+			documentLengths.put(new Entry(className, docId), oldLength);
 		}
 		else
 		{
 			oldLength = 1L;
-			documentLengths.put(docId, oldLength);
+			documentLengths.put(new Entry(className, docId), oldLength);
 		}
 		
 	}
@@ -97,7 +96,7 @@ public class Result
 
 	    	// Get Frequency
 	    	Integer frequency = next.getFreq();
-	    	next.setWeight(frequency.doubleValue()/ documentLengths.get(next.getDocId()).doubleValue());
+	    	next.setWeight(frequency.doubleValue()/ documentLengths.get(next));
 	    	
 	    	itr.set(next);
 	    }
