@@ -1,4 +1,5 @@
 public class Entry {
+    public String clazz;
     public Long docId;
     public Integer freq;
     public Double weight;
@@ -9,6 +10,14 @@ public class Entry {
 
     public void setDocId(Long docId) {
         this.docId = docId;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 
     public Integer getFreq() {

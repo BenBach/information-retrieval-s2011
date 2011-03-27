@@ -38,7 +38,7 @@ public class Result {
         this.docs = docs;
     }
 
-    public void addToDocList(Long docId) {
+    public void addToDocList(String className, Long docId) {
         // Already in List
         ListIterator<Entry> itr = docs.listIterator();
         while (itr.hasNext()) {
@@ -52,6 +52,7 @@ public class Result {
         }
         Entry entry = new Entry();
         entry.setDocId(docId);
+        entry.setClazz(className);
         entry.setFreq(1);
 
         docs.add(entry);
@@ -87,7 +88,7 @@ public class Result {
         }
     }
 
-    public boolean performFeatureSelection(int lowerTreshold, int upperTreshold) {
+    public boolean performFeatureSelection(float lowerThreshold, float upperThreshold) {
         int counter = 0;
         // Already in List
         ListIterator<Entry> itr = docs.listIterator();
@@ -102,7 +103,10 @@ public class Result {
             }
         }
 
-        if (counter < lowerTreshold || counter > upperTreshold) {
+        boolean withinLowerBound = lowerThreshold > 0.0f && counter > lowerThreshold;
+        boolean withinUpperBound = upperThreshold > 0.0f && counter < upperThreshold;
+
+        if (withinLowerBound && withinUpperBound) {
             // Remove Feature
             setFreq(0);
             return true;

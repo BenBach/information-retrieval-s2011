@@ -57,14 +57,14 @@ public class Utility {
             if (containsLetter(next))
                 tokens.add(next);
         }
-        System.out.println("-- TOKENS --\n");
+       // System.out.println("-- TOKENS --\n");
         for (String token : tokens) {
             // Remove ,.;:
             token = token.replaceAll("[^A-Za-z\\s]", "");
             token = token.toLowerCase();
-            System.out.println(token);
+          //  System.out.println(token);
         }
-        System.out.println("---------\n");
+       // System.out.println("---------\n");
 
         return tokens;
     }
@@ -76,7 +76,7 @@ public class Utility {
 
         try {
             tokenize = new Scanner(file);
-            System.out.println("-- TOKENS --\n");
+            //System.out.println("-- TOKENS --\n");
             while (tokenize.hasNext()) {
                 String next = tokenize.next();
 
@@ -87,13 +87,13 @@ public class Utility {
 
                     // If no stop word
                     if (!isStopWord(next)) {
-                        System.out.println(next);
+                       // System.out.println(next);
                         tokens.add(next);
                     }
                 }
 
             }
-            System.out.println("---------\n");
+            //System.out.println("---------\n");
 
             return tokens;
         } catch (FileNotFoundException e) {
@@ -113,7 +113,7 @@ public class Utility {
     }
 
     public static ArrayList<String> Stemm(ArrayList<String> tokens) {
-        System.out.println("-- BEGIN STEMMING--\n");
+       // System.out.println("-- BEGIN STEMMING--\n");
 
         Stemmer s = new Stemmer();
 
@@ -129,12 +129,12 @@ public class Utility {
             {
                 token = s.toString();
 
-                System.out.println(token);
+                //System.out.println(token);
 
                 // Save in Array List
             }
         }
-        System.out.println("-- END STEMMING--\n");
+     //   System.out.println("-- END STEMMING--\n");
 
         return tokens;
     }
