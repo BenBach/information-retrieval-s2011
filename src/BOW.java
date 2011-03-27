@@ -4,28 +4,36 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.CharBuffer;
+import java.nio.channels.FileChannel;
 import java.util.*;
 
 public class BOW {
-    @Argument(required = true, index = 0, usage = "Corpus directory.")
+    @Argument(required = true, index = 0, multiValued = false, usage = "Corpus directory.")
     private File mainDirectory;
 
-    @Option(name = "-s", aliases = {"--stem"}, usage = "Enables stemming.")
-    private boolean doStemming;
+    @Option(name = "-s", required = false, aliases = {"--stem"}, usage = "Enables stemming.")
+    private boolean doStemming = false;
 
-    @Option(name = "-l", aliases = {"--lower-bound"}, usage = "Defines lower frequency threshold.")
+    @Option(name = "-l", required = false, aliases = {"--lower-bound"}, usage = "Defines lower frequency threshold.")
     private int lowerThreshold = -1;
 
-    @Option(name = "-u", aliases = {"--upper-bound"}, usage = "Defines upper frequency threshold.")
+    @Option(name = "-u", required = false, aliases = {"--upper-bound"}, usage = "Defines upper frequency threshold.")
     private int upperThreshold = -1;
 
-    public void run() {
+    @Option(name = "-o", required = false, aliases = {"--output"}, usage = "name of the generated ARFF file.")
+    private File output = null;
+
+    public void run() throws IOException {
         Dictionary<String, Result> results = new Hashtable<String, Result>();
 //
 //        // Read File and tokenize
 //        File mainDirectory = new File("20news-18828");
 
         // Iterate directories
+
         File directories[];
 
         if (mainDirectory.isDirectory())
@@ -72,8 +80,6 @@ public class BOW {
                     }
                 }
             }
-
-
         }
 
         Enumeration<Result> e = results.elements();
@@ -92,6 +98,28 @@ public class BOW {
 
         }
 
+        if (output != null) {
+            FileOutputStream outputStream = new FileOutputStream(output, false);
+            FileChannel fileChannel = outputStream.getChannel();
+            CharBuffer buffer = CharBuffer.allocate(2048);
+
+            buffer.put("@RELATION ");
+            buffer.put(output.getName());
+            buffer.put("\n@ATTRIBUTE feature string\n");
+            buffer.put("@ATTRIBUTE frequency \n");
+
+            while (e.hasMoreElements()) {
+                Result result = e.nextElement();
+                result.calculateWeights();
+
+                if (result.performFeatureSelection(lowerThreshold, upperThreshold)) {
+                    results.remove(result.getFeature());
+                } else {
+
+                }
+            }
+        }
+
         // Print Result List
         //System.out.println(results.toString());
 
@@ -101,7 +129,7 @@ public class BOW {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         BOW bow = new BOW();
         CmdLineParser parser = new CmdLineParser(bow);
         parser.setUsageWidth(80); // width of the error display area
