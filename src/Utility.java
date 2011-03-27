@@ -78,6 +78,9 @@ public class Utility
 
 	private static boolean isStopWord(String next)
 	{
+		if(next.length() < 3)
+			return true;
+		
 		for(String stopWord : stopWords)
 		{
 			if(stopWord.equalsIgnoreCase(next))
