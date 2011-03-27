@@ -41,7 +41,6 @@ public class BOW {
 //        File mainDirectory = new File("20news-18828");
 
         // Iterate directories
-
         File directories[];
 
         if (mainDirectory.isDirectory())
@@ -72,16 +71,15 @@ public class BOW {
                     if (result == null) {
                         // No add to dictionary
                         List<Entry> newList = new LinkedList<Entry>();
-                        Entry entry = new Entry();
-                        entry.setDocId(fileName);
+                        Entry entry = new Entry(className, fileName);
+                        // entry.setDocId(fileName);
                         entry.setFreq(1);
-                        entry.setClazz(className);
 
                         newList.add(entry);
 
                         results.put(token, new Result(token, 1, newList));
 
-                        Result.incrementDocumentLength(fileName);
+                        Result.incrementDocumentLength(className, fileName);
                     } else {
                         // Add document if it's not already in list
 
@@ -209,7 +207,7 @@ public class BOW {
     /**
      * @param args
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         BOW bow = new BOW();
         CmdLineParser parser = new CmdLineParser(bow);
         parser.setUsageWidth(80); // width of the error display area
