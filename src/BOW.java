@@ -57,7 +57,7 @@ public class BOW {
 
             for (File file : files) {
                 Long fileName = Long.parseLong(file.getName());
-
+                Result.incrementNrDocsInClass(className);
                 ArrayList<String> tokens = Utility.Tokenize(file);
 
                 if (doStemming)
@@ -92,6 +92,7 @@ public class BOW {
 
         Enumeration<Result> e = results.elements();
 
+            
         if (output != null) {
             FileWriter writer = new FileWriter(output, false);
 
@@ -138,6 +139,7 @@ public class BOW {
 
                 for (Entry entry : result.getDocs()) {
                     Id id = new Id(entry.getClassName(), "" + entry.getDocId());
+
 
                     List<Column> entries = rows.get(id);
 

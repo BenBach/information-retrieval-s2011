@@ -8,6 +8,7 @@ import java.util.ListIterator;
 public class Result
 {
 	public static Dictionary<Entry, Long> documentLengths = new Hashtable<Entry, Long>();
+	public static Dictionary<String, Long> nrDocsInClass = new Hashtable<String, Long>();
 	private String feature;
 	
 	
@@ -45,8 +46,25 @@ public class Result
 		this.docs = docs;
 	}
 	
+	public static void incrementNrDocsInClass(String className)
+	{
+		Long oldLength = nrDocsInClass.get(className);
+		if(oldLength != null)
+		{
+			oldLength++;
+			nrDocsInClass.remove(className);
+			nrDocsInClass.put(className, oldLength);
+		}
+		else
+		{
+			oldLength = 1L;
+			nrDocsInClass.put(className, oldLength);
+		}		
+	}
+	
 	public void addToDocList(String className, Long docId)
 	{
+		
 		// Already in List
 		ListIterator<Entry> itr = docs.listIterator();
 	    while(itr.hasNext())
@@ -82,8 +100,7 @@ public class Result
 		{
 			oldLength = 1L;
 			documentLengths.put(new Entry(className, docId), oldLength);
-		}
-		
+		}		
 	}
 	
 	public void calculateWeightsBoolean()
@@ -132,6 +149,22 @@ public class Result
 	    	// Get Frequency
 	    	Integer frequency = next.getFreq();
 	    	next.setWeight(frequency.doubleValue()/ documentLengths.get(next));
+	    	
+	    	itr.set(next);
+	    }
+	}
+	
+	public void calculateWeightsTFIDF()
+	{
+		// Already in List
+		ListIterator<Entry> itr = docs.listIterator();
+	    while(itr.hasNext())
+	    {
+	    	Entry next = itr.next();
+
+	    	// Get Frequency
+	    	Integer frequency = next.getFreq();
+	    	next.setWeight((frequency.doubleValue()/ documentLengths.get(next)) * (Math.log10(nrDocsInClass.get(next.getClassName()))/  docs.size()));
 	    	
 	    	itr.set(next);
 	    }
