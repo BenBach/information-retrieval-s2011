@@ -93,11 +93,6 @@ public class BOW {
 
         Enumeration<Result> e = results.elements();
 
-        //iterate through Hashtable values Enumeration
-        while (e.hasMoreElements()) {
-            Result result = e.nextElement();
-            result.calculateWeightsBoolean();
-        }
             
         if (output != null) {
             FileWriter writer = new FileWriter(output, false);
