@@ -41,7 +41,7 @@ public class BOW {
             File files[] = directory.listFiles();
             for (File file : files) {
                 Long fileName = Long.parseLong(file.getName());
-
+                Result.incrementNrDocsInClass(className);
                 ArrayList<String> tokens = Utility.Tokenize(file);
 
                 if (doStemming)
@@ -81,7 +81,7 @@ public class BOW {
         //iterate through Hashtable values Enumeration
         while (e.hasMoreElements()) {
             Result result = e.nextElement();
-            result.calculateWeightsNormalizedTF();
+            result.calculateWeightsTFIDF();
 
             if (result.performFeatureSelection(lowerThreshold, upperThreshold)) {
                 results.remove(result.getFeature());
