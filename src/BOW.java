@@ -13,6 +13,7 @@ public class BOW {
     public enum Method {
         BOOLEAN,
         TF,
+        TF_NORMALIZED,
         TF_IDF
     }
 
@@ -128,10 +129,13 @@ public class BOW {
                         result.calculateWeightsBoolean();
                         break;
                     case TF:
-                        result.calculateWeightsBoolean();
+                        result.calculateWeightsTF();
                         break;
+                    case TF_NORMALIZED:
+                        result.calculateWeightsNormalizedTF();
                     case TF_IDF:
-                        result.calculateWeightsBoolean();
+                        // TODO
+                        //result.calculateWeightsNormalizedTF();
                         break;
                 }
 
