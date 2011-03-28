@@ -3,11 +3,9 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DecimalFormat;
+import java.io.*;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 public class BOW {
     public enum Method {
@@ -16,19 +14,19 @@ public class BOW {
         TF_IDF
     }
 
-    @Argument(required = true, index = 0, multiValued = false, usage = "Corpus directory.")
+    @Argument(required = true, index = 0, usage = "Corpus directory.")
     private File mainDirectory;
 
-    @Option(name = "-s", required = false, aliases = {"--stem"}, usage = "Enables stemming.")
+    @Option(name = "-s", aliases = {"--stem"}, usage = "Enables stemming.")
     private boolean doStemming = false;
 
-    @Option(name = "-l", required = false, aliases = {"--lower-bound"}, usage = "Defines lower frequency threshold.")
+    @Option(name = "-l", aliases = {"--lower-bound"}, usage = "Defines lower frequency threshold.")
     private float lowerThreshold = -1.0f;
 
-    @Option(name = "-u", required = false, aliases = {"--upper-bound"}, usage = "Defines upper frequency threshold.")
+    @Option(name = "-u", aliases = {"--upper-bound"}, usage = "Defines upper frequency threshold.")
     private float upperThreshold = -1.0f;
 
-    @Option(name = "-o", required = false, aliases = {"--output"}, usage = "name of the generated ARFF file.")
+    @Option(name = "-o", required = true, aliases = {"--output"}, usage = "name of the generated ARFF file.")
     private File output = null;
 
     @Option(name = "-m", aliases = {"--method"}, usage = "Method used for weight calculation")
@@ -94,7 +92,12 @@ public class BOW {
 
             
         if (output != null) {
-            FileWriter writer = new FileWriter(output, false);
+
+            FileOutputStream fileOutputStream = new FileOutputStream(output, false);
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(fileOutputStream);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(gzipOutputStream);
+            PrintStream out = new PrintStream(bufferedOutputStream);
+            
 
             List<String> tokens = new ArrayList<String>(results.size());
 
@@ -109,15 +112,22 @@ public class BOW {
 
             Collections.sort(tokens);
 
-            writer.write("@RELATION ");
-            writer.write(output.getName());
-            writer.write("\n@ATTRIBUTE document string\n");
-            writer.write("\n@ATTRIBUTE class string\n");
+            out.println("% stemming: " + doStemming);
+            out.println("% method: " + method);
+            out.println("% lower bound: " + lowerThreshold);
+            out.println("% upper bound: " + upperThreshold);
+            out.print("@RELATION ");
+            out.println(output.getName());
+            out.println("@ATTRIBUTE _document string");
+            out.println("@ATTRIBUTE _class string");
 
-            for (String token : tokens)
-                writer.write("@ATTRIBUTE tok_" + token + " numeric\n");
-            writer.write("@DATA\n");
-            DecimalFormat floatFormat = new DecimalFormat("0.####################E0");
+            for (String token : tokens) {
+                out.print("@ATTRIBUTE ");
+                out.print(token);
+                out.println(" numeric");
+            }
+            out.println("@DATA");
+            //DecimalFormat floatFormat = new DecimalFormat("0.####################E0");
 
             Map<Id, List<Column>> rows = new HashMap<Id, List<Column>>();
 
@@ -158,10 +168,10 @@ public class BOW {
             for (Map.Entry<Id, List<Column>> row : rows.entrySet()) {
                 Collections.sort(row.getValue());
 
-                writer.write("{ 0 ");
-                writer.write(row.getKey().name);
-                writer.write(", 1 ");
-                writer.write(row.getKey().clazz);
+                out.print("{ 0 ");
+                out.print(row.getKey().name);
+                out.print(", 1 ");
+                out.print(row.getKey().clazz);
 
                 for (Column entry : row.getValue()) {
                     boolean isInsideLowerBound = lowerThreshold < 0 || entry.weight > lowerThreshold;
@@ -177,13 +187,16 @@ public class BOW {
                         continue;
                     }
 
-                    writer.write("," + position + " " + floatFormat.format(entry.weight));
+                    out.print(",");
+                    out.print(position);
+                    out.print(" ");
+                    out.print(entry.weight);
                 }
 
-                writer.write("}\n");
+                out.println("}");
             }
 
-            writer.close();
+            out.close();
         }
 
         // Print Result List

@@ -34,7 +34,6 @@ public class Utility
 				}
 
 			}
-			System.out.println("Finished tokenizing");
 
 			return tokens;
 		} catch (FileNotFoundException e)
@@ -80,7 +79,6 @@ public class Utility
 				// Save in Array List
 			}
 		}
-		System.out.println("Finished Stemming");
 
 		return tokens;
 	}
