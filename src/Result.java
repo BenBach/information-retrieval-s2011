@@ -62,7 +62,7 @@ public class Result
 		}		
 	}
 	
-	public void addToDocList(String className, Long docId)
+	public void addToDocList(String className, String docId)
 	{
 		
 		// Already in List
@@ -70,7 +70,7 @@ public class Result
 	    while(itr.hasNext())
 	    {
 	    	Entry next = itr.next();
-	    	if(next.getDocId() == docId && next.getClassName().equals(className))
+	    	if(next.getDocId().equals(docId) && next.getClassName().equals(className))
 	    	{
 	    		next.setFreq(next.getFreq() + 1);
 	    		itr.set(next);
@@ -87,7 +87,7 @@ public class Result
 		incrementDocumentLength(className, docId);
 	}
 	
-	public static void incrementDocumentLength(String className, Long docId)
+	public static void incrementDocumentLength(String className, String docId)
 	{
 		Long oldLength = documentLengths.get(new Entry(className, docId));
 		if(oldLength != null)
