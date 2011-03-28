@@ -98,7 +98,6 @@ public class BOW {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(gzipOutputStream);
             PrintStream out = new PrintStream(bufferedOutputStream);
             
-
             List<String> tokens = new ArrayList<String>(results.size());
 
             Enumeration<String> tokensEnumeration = results.keys();
