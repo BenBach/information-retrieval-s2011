@@ -126,7 +126,6 @@ public class BOW {
                 out.println(" numeric");
             }
             out.println("@DATA");
-            //DecimalFormat floatFormat = new DecimalFormat("0.####################E0");
 
             Map<Id, List<Column>> rows = new HashMap<Id, List<Column>>();
 
@@ -160,6 +159,11 @@ public class BOW {
                     c.token = result.getFeature();
                     c.weight = entry.getWeight();
 
+                    boolean isInsideLowerBound = lowerThreshold < 0 || c.weight > lowerThreshold;
+                    boolean isInsideUpperBound = upperThreshold < 0 || c.weight < upperThreshold;
+
+                    if(!isInsideLowerBound || !isInsideUpperBound) continue;
+
                     entries.add(c);
                 }
             }
@@ -173,11 +177,6 @@ public class BOW {
                 out.print(row.getKey().clazz);
 
                 for (Column entry : row.getValue()) {
-                    boolean isInsideLowerBound = lowerThreshold < 0 || entry.weight > lowerThreshold;
-                    boolean isInsideUpperBound = upperThreshold < 0 || entry.weight < upperThreshold;
-
-                    if (!isInsideLowerBound || !isInsideUpperBound) continue;
-
                     //int pos = tokens.indexOf(entry.)
                     int position = tokens.indexOf(entry.token) + 2;
 
