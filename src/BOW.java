@@ -132,8 +132,7 @@ public class BOW {
                         result.calculateWeightsNormalizedTF();
                         break;
                     case TF_IDF:
-                        // TODO
-                        //result.calculateWeightsNormalizedTF();
+                        result.calculateWeightsTFIDF();
                         break;
                 }
 
