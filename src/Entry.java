@@ -2,10 +2,10 @@
 public class Entry
 {
 	public String className;
-	public Long docId;
+	public String docId;
 	public Integer freq;
 	public Double weight;
-	public Entry(String className, Long docId)
+	public Entry(String className, String docId)
 	{
 		this.className = className;
 		this.docId = docId;
@@ -18,11 +18,11 @@ public class Entry
 	{
 		this.className = className;
 	}
-	public Long getDocId()
+	public String getDocId()
 	{
 		return docId;
 	}
-	public void setDocId(Long docId)
+	public void setDocId(String docId)
 	{
 		this.docId = docId;
 	}

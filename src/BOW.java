@@ -56,7 +56,7 @@ public class BOW {
             File files[] = directory.listFiles();
 
             for (File file : files) {
-                Long fileName = Long.parseLong(file.getName());
+                String fileName = file.getName();
                 Result.incrementNrDocsInClass(className);
                 ArrayList<String> tokens = Utility.Tokenize(file);
 
