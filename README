@@ -1,0 +1,22 @@
+Information Retrieval
+summer term 2011, Vienna UT
+Patrick Marschik, Benjamin Bachhuber
+
+Multi Agent Systems using JADE - Prisoners Dilemma
+
+To build the source:
+    ant build
+
+To create an executable jar:
+    ant jar
+
+To run the sample:
+    java bow.jar
+	
+	with the following command line arguments:
+FILE                                   : Corpus directory.
+ -l (--lower-bound) N                  : Defines lower frequency threshold.
+ -m (--method) [BOOLEAN | TF | TF_IDF] : Method used for weight calculation
+ -o (--output) FILE                    : name of the generated ARFF file.
+ -s (--stem)                           : Enables stemming.
+ -u (--upper-bound) N                  : Defines upper frequency threshold.
